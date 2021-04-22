@@ -1,0 +1,110 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database.db"
+}
+
+model Asset {
+
+  id     Int @id @default(autoincrement())
+  typeId Int
+
+  code String    @unique
+  name String
+  type AssetType @relation(fields: [typeId], references: [id])
+
+  ledgerEntry    LedgerEntry[]
+  buyAssetTrade  Trade[]         @relation("buyAsset")
+  sellAssetTrade Trade[]         @relation("sellAsset")
+  yieldTransfer  YieldTransfer[]
+}
+
+model AssetType {
+  id    Int     @id @default(autoincrement())
+  value String  @unique
+  asset Asset[]
+}
+
+model LedgerEntry {
+
+  id      Int @id @default(autoincrement())
+  typeId  Int
+  assetId Int
+
+  time    DateTime
+  type    LedgerEntryType @relation(fields: [typeId], references: [id])
+  asset   Asset           @relation(fields: [assetId], references: [id])
+  amount  Decimal
+  fee     Decimal
+  balance Decimal
+}
+
+model LedgerEntryType {
+  id          Int           @id @default(autoincrement())
+  value       String        @unique
+  ledgerEntry LedgerEntry[]
+}
+
+model Trade {
+
+  id          Int @id @default(autoincrement())
+  buyAssetId  Int
+  sellAssetId Int
+
+  time       DateTime
+  buyAsset   Asset    @relation("buyAsset", fields: [buyAssetId], references: [id])
+  buyAmount  Decimal
+  buyFee     Decimal
+  buyBalance Decimal
+
+  sellAsset   Asset   @relation("sellAsset", fields: [sellAssetId], references: [id])
+  sellAmount  Decimal
+  sellFee     Decimal
+  sellBalance Decimal
+}
+
+model YieldTransfer {
+
+  id      Int @id @default(autoincrement())
+  assetId Int
+
+  activeSince DateTime
+  asset       Asset    @relation(fields: [assetId], references: [id])
+  amount      Decimal
+}
+
+// model Info {
+//   key   String @id
+//   value String
+// }
+
+// model Transfer {
+//   id             Int          @id @default(autoincrement())
+//   time           DateTime
+//   type           TransferType @relation(fields: [transferTypeId], references: [id])
+//   asset          Asset        @relation(fields: [assetId], references: [id])
+//   amount         Decimal
+//   fee            Decimal
+//   balance        Decimal
+//   transferTypeId Int
+//   assetId        Int
+// }
+
+// model YieldEarning {
+//   id      Int      @id @default(autoincrement())
+//   time    DateTime
+//   asset   Asset    @relation(fields: [assetId], references: [id])
+//   amount  Decimal
+//   balance Decimal
+//   assetId Int
+// }
+
+// model TransferType {
+//   id        Int        @id
+//   name      String     @unique
+//   direction Int
+//   Transfer  Transfer[]
+// }
+
+generator client {
+  provider = "prisma-client-js"
+}

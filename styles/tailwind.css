@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    caption {
+        @apply mb-3 text-lg text-gray-800 text-right font-semibold border-b border-gray-300
+    }
+
+    thead tr {
+        @apply text-left
+    }
+
+    th {
+        @apply font-semibold
+    }
+
+    tr {
+        @apply border-b border-gray-500
+    }
+}
