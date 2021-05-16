@@ -20,7 +20,7 @@
 
 # dev
 .vscode
-db/database.db
+database.db
 
 # debug
 npm-debug.log*
