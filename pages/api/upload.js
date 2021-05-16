@@ -4,19 +4,27 @@ import { PrismaClient } from '@prisma/client'
 
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: { bodyParser: false }
 }
 
 export default async (req, res) => {
 
-  const form = formidable({ uploadDir: './uploads', keepExtensions: true })
-
   try {
     // parse file from form data
+    const form = formidable({ uploadDir: './uploads', keepExtensions: true })
     const file = await new Promise((resolve, reject) =>
-      form.parse(req, (err, _, file) => err && reject(err) || resolve(file.accountStatement)))
+      form.parse(req, (err, _, file) => err && reject(err) || resolve(file)))
+
+    switch (file) {
+      case 'account-statement':
+        break
+      case 'yield-transactions':
+        break
+      default:
+        // unknown file
+        break
+    }
+
 
     // connect to db
     const prisma = new PrismaClient()
@@ -27,7 +35,7 @@ export default async (req, res) => {
     await prisma.$executeRaw('UPDATE sqlite_sequence SET seq = 0 WHERE name = "LedgerEntry" OR name = "LedgerEntryType"')
 
     // parse excel file and insert data into db
-    const workbook = new ExcelJS.stream.xlsx.WorkbookReader(file.path)
+    const workbook = new ExcelJS.stream.xlsx.WorkbookReader(file.fileChooser.path)
     let rowsInserted = 0
 
     for await (const worksheet of workbook) {
@@ -65,7 +73,7 @@ export default async (req, res) => {
           data: {
             time: new Date(row.getCell(2).value + 'Z'),
             type: { connectOrCreate: { where: { value: type }, create: { value: type } } },
-            ccy: { connect: { code: currency } },
+            asset: { connect: { code: currency } },
             amount: netAmount,
             fee: row.getCell(7).value,
             balance: balances[currency]
@@ -80,8 +88,8 @@ export default async (req, res) => {
     }
 
     await prisma.$disconnect()
-    console.info(`Insert ${rowsInserted} rows`)
-    res.status(200).json({ status: 'Success', rowsInserted: rowsInserted })
+    console.info(`Inserted ${rowsInserted} rows`)
+    res.status(200).json({ status: `Successfuly imported ${rowsInserted} entries!` })
   }
   catch (err) {
     console.log(err)
