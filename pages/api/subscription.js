@@ -21,12 +21,11 @@ export default async (req, res) => {
   }
   else {
 
-
     const subscriptions = await prisma.yieldTransfer.findMany({
-      orderBy: { ccyId: 'asc' },
+      orderBy: { assetId: 'asc' },
       select: {
         activeSince: true,
-        ccy: { select: { code: true } },
+        asset: { select: { code: true } },
         amount: true
       }
     })
