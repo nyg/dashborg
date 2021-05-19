@@ -4,9 +4,7 @@
   "description": "Dashboard for cryptoassets.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "db": "node db/init-*.js"
+    "init": "prisma db push && node db/init-*.js"
   },
   "repository": {
     "type": "git",

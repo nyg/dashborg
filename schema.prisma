@@ -67,43 +67,11 @@ model YieldTransfer {
   id      Int @id @default(autoincrement())
   assetId Int
 
-  activeSince DateTime
-  asset       Asset    @relation(fields: [assetId], references: [id])
-  amount      Decimal
+  completionDate DateTime
+  account        String
+  asset          Asset    @relation(fields: [assetId], references: [id])
+  amount         Decimal
 }
-
-// model Info {
-//   key   String @id
-//   value String
-// }
-
-// model Transfer {
-//   id             Int          @id @default(autoincrement())
-//   time           DateTime
-//   type           TransferType @relation(fields: [transferTypeId], references: [id])
-//   asset          Asset        @relation(fields: [assetId], references: [id])
-//   amount         Decimal
-//   fee            Decimal
-//   balance        Decimal
-//   transferTypeId Int
-//   assetId        Int
-// }
-
-// model YieldEarning {
-//   id      Int      @id @default(autoincrement())
-//   time    DateTime
-//   asset   Asset    @relation(fields: [assetId], references: [id])
-//   amount  Decimal
-//   balance Decimal
-//   assetId Int
-// }
-
-// model TransferType {
-//   id        Int        @id
-//   name      String     @unique
-//   direction Int
-//   Transfer  Transfer[]
-// }
 
 generator client {
   provider = "prisma-client-js"
