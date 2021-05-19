@@ -10,10 +10,10 @@ export default function Upload({ name, url }) {
     // prevent form from being submitted after the button being clicked
     event.preventDefault()
 
-    // if (event.target.fileChooser.files.length != 1) {
-    //   setUploadStatus('Choose a file before uploading!')
-    //   return
-    // }
+    if (event.target[name].files.length != 1) {
+      setUploadStatus('Choose a file before uploading!')
+      return
+    }
 
     const uploadResponse = await (await fetch(url, {
       method: 'POST',
@@ -21,7 +21,7 @@ export default function Upload({ name, url }) {
     })).json()
 
     console.debug(uploadResponse)
-    setUploadStatus(uploadResponse.status)
+    setUploadStatus(uploadResponse.message)
   }
 
   return (
