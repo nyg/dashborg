@@ -21,6 +21,7 @@
 # dev
 .vscode
 database.db
+uploads
 
 # debug
 npm-debug.log*
