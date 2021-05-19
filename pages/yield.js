@@ -5,7 +5,7 @@ import Amount from '../components/amount'
 export default function Yield() {
 
   const fetcher = (...args) => fetch(...args).then(res => res.json())
-  const { data, error } = useSWR('/api/yield', fetcher)
+  const { data, error } = useSWR('/api/yield-earning', fetcher)
 
   let earnings
   if (error) {
@@ -40,7 +40,6 @@ export default function Yield() {
       </table>
     )
   }
-
 
   return (
     <Layout>
