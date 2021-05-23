@@ -100,7 +100,11 @@ async function importYieldTransactions(path) {
         console.info(`Processed ${row.number} rows.`)
       }
 
-      const completionDate = new Date((row.getCell(1).value - 25569) * 86400 * 1000 + (new Date(0).getTimezoneOffset() * 60 * 1000))
+      // convert Excel date to timestamp
+      const timestamp = Math.round((row.getCell(1).value - 25_569) * 86_400_000)
+      const timezoneOffset = new Date(timestamp).getTimezoneOffset() * 60
+      const completionDate = new Date(timestamp + timezoneOffset * 1_000)
+
       const account = row.getCell(2).value ?? 'Main'
       const asset = row.getCell(3).value
       const amount = row.getCell(4).value
