@@ -26,7 +26,7 @@ export function asCurrency(amount, currency, { hideSymbol = false, crypto = fals
   return new Intl
     .NumberFormat(locales, {
       style: 'currency',
-       // not all crypto symbols are supported
+      // not all crypto symbols are supported
       currency: crypto ? 'CHF' : currency,
       // for all crypto we will display 8 decimals
       ...(crypto ? { minimumFractionDigits: 8, maximumFractionDigits: 8 } : {})
@@ -39,4 +39,10 @@ export function asCurrency(amount, currency, { hideSymbol = false, crypto = fals
       : (crypto && p.value == 'currency' ? ((p.value = currency) || true) : true))
     .reduce((s, p) => s + p.value, '')
     .trim()
+}
+
+export function asDecimal(number) {
+  return new Intl
+    .NumberFormat(locales, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    .format(number)
 }
