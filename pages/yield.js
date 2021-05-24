@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import Head from 'next/head'
 import Layout from '../components/layout'
 import * as format from '../utils/format'
+import TdNum from '../components/td-num'
 
 export default function Yield() {
 
@@ -24,37 +25,38 @@ export default function Yield() {
             {Object.keys(data.earnings[asset]).map(account => {
               const totalRow = data.earnings[asset][account].pop()
               return (
-                <table key={`${asset}-${account}`} className="w-full">
+                <table key={`${asset}-${account}`}>
                   <caption>{asset} — {account}</caption>
-                  <thead>
-                    <tr className="text-right">
-                      <th colSpan={4}>Period</th>
-                      <th colSpan={2}>Balance</th>
-                      <th rowSpan={2}>Yield earned</th>
-                      <th rowSpan={2}>Daily average</th>
-                      <th rowSpan={2}>Approx rate</th>
+                  <thead className="text-right">
+                    <tr>
+                      <th colSpan={4} className="v-sep">Period</th>
+                      <th colSpan={2} className="v-sep">Balance</th>
+                      <th colSpan={3} className="pr-2">Yield</th>
                     </tr>
-                    <tr className="text-right">
-                      <th className="text-left">Start</th>
-                      <th className="text-left">End</th>
-                      <th>Days</th>
-                      <th>Transfered</th>
+                    <tr>
                       <th>Start</th>
                       <th>End</th>
+                      <th>Days</th>
+                      <th className="v-sep">Transfered</th>
+                      <th>Start</th>
+                      <th className="v-sep">End</th>
+                      <th>Earned</th>
+                      <th>Average</th>
+                      <th className="pr-2">APY</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.earnings[asset][account].map(period => (
                       <tr key={period.startDate}>
-                        <td>{format.asLongDate(period.startDate)}</td>
-                        <td>{format.asLongDate(period.endDate)}</td>
-                        <td className="num-cell">{period.dayCount}</td>
-                        <td className="num-cell">{format.asDecimal(period.transfered)}</td>
-                        <td className="num-cell">{format.asDecimal(period.startBalance)}</td>
-                        <td className="num-cell">{format.asDecimal(period.endBalance)}</td>
-                        <td className="num-cell">{format.asDecimal(period.yieldEarned)}</td>
-                        <td className="num-cell">{format.asDecimal(period.dailyAverage)}</td>
-                        <td className="num-cell"></td>
+                        <td className="text-right">{format.asLongDate(period.startDate)}</td>
+                        <td className="text-right">{format.asLongDate(period.endDate)}</td>
+                        <TdNum>{period.dayCount}</TdNum>
+                        <TdNum className="v-sep">{period.transfered}</TdNum>
+                        <TdNum>{period.startBalance}</TdNum>
+                        <TdNum className="v-sep">{period.endBalance}</TdNum>
+                        <TdNum>{period.yieldEarned}</TdNum>
+                        <TdNum>{period.dailyAverage}</TdNum>
+                        <td className="pr-2"></td>
                       </tr>
                     ))}
                   </tbody>
@@ -62,13 +64,13 @@ export default function Yield() {
                     <tr>
                       <th></th>
                       <th></th>
-                      <th className="num-cell">{totalRow.dayCount}</th>
-                      <th className="num-cell">{format.asDecimal(totalRow.transfered)}</th>
-                      <th className="num-cell">{format.asDecimal(totalRow.startBalance)}</th>
-                      <th className="num-cell">{format.asDecimal(totalRow.endBalance)}</th>
-                      <th className="num-cell">{format.asDecimal(totalRow.yieldEarned)}</th>
-                      <th className="num-cell">{format.asDecimal(totalRow.dailyAverage)}</th>
-                      <th className="num-cell"></th>
+                      <TdNum>{totalRow.dayCount}</TdNum>
+                      <TdNum className="v-sep">{totalRow.transfered}</TdNum>
+                      <TdNum>{totalRow.startBalance}</TdNum>
+                      <TdNum className="v-sep">{totalRow.endBalance}</TdNum>
+                      <TdNum>{totalRow.yieldEarned}</TdNum>
+                      <TdNum>{totalRow.dailyAverage}</TdNum>
+                      <th className="pr-2"></th>
                     </tr>
                   </tfoot>
                 </table>

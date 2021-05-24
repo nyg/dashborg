@@ -34,7 +34,7 @@ export default function Layout({ children, name }) {
         </nav>
 
         <div className="text-sm">
-          <div className="lg:max-w-4xl lg:pl-2 lg:pr-2">
+          <div className="lg:max-w-5xl lg:p-4">
             {children}
           </div>
         </div>
