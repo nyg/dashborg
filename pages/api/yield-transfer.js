@@ -6,15 +6,30 @@ export default async (req, res) => {
   const prisma = new PrismaClient()
   await prisma.$connect()
 
-  const yieldTransfers = await prisma.yieldTransfer.findMany({
-    orderBy: { assetId: 'asc' },
-    select: {
-      completionDate: true,
-      account: true,
-      asset: { select: { code: true } },
-      amount: true
-    }
-  })
+  const transfers = (await prisma.yieldTransfer
+    .findMany({
+      orderBy: { completionDate: 'asc' },
+      select: {
+        completionDate: true,
+        account: true,
+        asset: { select: { code: true } },
+        amount: true
+      }
+    }))
+    .reduce((transfers, transfer) => {
 
-  res.status(200).json({ status: 'success', yieldTransfers: yieldTransfers })
+      // init keys
+      transfers[transfer.asset.code] ??= {}
+      transfers[transfer.asset.code][transfer.account] ??= []
+
+      transfers[transfer.asset.code][transfer.account].push({
+        completionDate: transfer.completionDate.getTime(),
+        amount: transfer.amount
+      })
+
+      return transfers
+    }, {})
+
+  await prisma.$disconnect()
+  res.status(200).json({ status: 'success', transfers: transfers })
 }

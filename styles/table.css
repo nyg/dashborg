@@ -5,7 +5,11 @@
     }
 
     table caption {
-        @apply mb-2 text-gray-700 text-left font-semibold
+        @apply mb-1 text-gray-700 text-left font-semibold
+    }
+
+    table thead {
+        @apply text-left
     }
 
     table thead tr, table tbody tr {
