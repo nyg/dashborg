@@ -17,74 +17,57 @@ export default function Yield() {
     earnings = <div className="text-center pt-4">Loading data…</div>
   }
   else {
-    console.dir(Object.keys(data.periods))
     earnings = (
       <Fragment>
-        {Object.keys(data.periods).map(asset => (
+        {Object.keys(data.earnings).map(asset =>
           <Fragment key={asset}>
-            {Object.keys(data.periods[asset]).map(account => {
-              let totalDayCount = 0
-              let totalSubscription = 0
-              let totalYieldEarned = 0
-              let firstBalance
-              let lastBalance
+            {Object.keys(data.earnings[asset]).map(account => {
+              const totalRow = data.earnings[asset][account].pop()
               return (
                 <table key={`${asset}-${account}`} className="w-full">
                   <caption>{asset} — {account}</caption>
                   <thead>
                     <tr className="text-right">
-                      <th className="text-left">From</th>
-                      <th className="text-left">To</th>
+                      <th colSpan={4}>Period</th>
+                      <th colSpan={2}>Balance</th>
+                      <th rowSpan={2}>Yield earned</th>
+                      <th rowSpan={2}>Daily average</th>
+                      <th rowSpan={2}>Approx rate</th>
+                    </tr>
+                    <tr className="text-right">
+                      <th className="text-left">Start</th>
+                      <th className="text-left">End</th>
                       <th>Days</th>
-                      <th>Subscription</th>
-                      <th>Start balance</th>
-                      <th>End balance</th>
-                      <th>Yield earned</th>
-                      <th>Daily average</th>
-                      <th>Approx rate</th>
+                      <th>Transfered</th>
+                      <th>Start</th>
+                      <th>End</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data.periods[asset][account].startDates.map((startDate, index, startDates) => {
-
-                      const endDate = index + 1 < startDates.length ? startDates[index + 1] : data.periods[asset][account].endDate
-                      const transfered = data.earnings[startDate][asset][account].transfered
-                      const balanceFrom = data.earnings[startDate][asset][account].balance + transfered
-                      const balanceTo = data.earnings[endDate][asset][account].balance
-                      const yieldEarned = balanceTo - balanceFrom
-                      const dayCount = (endDate - startDate) / 86_400_000
-
-                      totalDayCount += dayCount
-                      totalSubscription += transfered
-                      totalYieldEarned += yieldEarned
-                      firstBalance ??= balanceFrom
-                      lastBalance = balanceTo
-
-                      return (
-                        <tr key={index}>
-                          <td>{format.asLongDate(startDate)}</td>
-                          <td>{format.asLongDate(endDate)}</td>
-                          <td className="num-cell">{dayCount}</td>
-                          <td className="num-cell">{format.asDecimal(transfered)}</td>
-                          <td className="num-cell">{format.asDecimal(balanceFrom)}</td>
-                          <td className="num-cell">{format.asDecimal(balanceTo)}</td>
-                          <td className="num-cell">{format.asDecimal(yieldEarned)}</td>
-                          <td className="num-cell">{format.asDecimal(yieldEarned / dayCount)}</td>
-                          <td className="num-cell"></td>
-                        </tr>
-                      )
-                    })}
+                    {data.earnings[asset][account].map(period => (
+                      <tr key={period.startDate}>
+                        <td>{format.asLongDate(period.startDate)}</td>
+                        <td>{format.asLongDate(period.endDate)}</td>
+                        <td className="num-cell">{period.dayCount}</td>
+                        <td className="num-cell">{format.asDecimal(period.transfered)}</td>
+                        <td className="num-cell">{format.asDecimal(period.startBalance)}</td>
+                        <td className="num-cell">{format.asDecimal(period.endBalance)}</td>
+                        <td className="num-cell">{format.asDecimal(period.yieldEarned)}</td>
+                        <td className="num-cell">{format.asDecimal(period.dailyAverage)}</td>
+                        <td className="num-cell"></td>
+                      </tr>
+                    ))}
                   </tbody>
                   <tfoot>
                     <tr>
                       <th></th>
                       <th></th>
-                      <th className="num-cell">{totalDayCount}</th>
-                      <th className="num-cell">{format.asDecimal(totalSubscription)}</th>
-                      <th className="num-cell">{format.asDecimal(firstBalance)}</th>
-                      <th className="num-cell">{format.asDecimal(lastBalance)}</th>
-                      <th className="num-cell">{format.asDecimal(totalYieldEarned)}</th>
-                      <th className="num-cell">{format.asDecimal(totalYieldEarned / totalDayCount)}</th>
+                      <th className="num-cell">{totalRow.dayCount}</th>
+                      <th className="num-cell">{format.asDecimal(totalRow.transfered)}</th>
+                      <th className="num-cell">{format.asDecimal(totalRow.startBalance)}</th>
+                      <th className="num-cell">{format.asDecimal(totalRow.endBalance)}</th>
+                      <th className="num-cell">{format.asDecimal(totalRow.yieldEarned)}</th>
+                      <th className="num-cell">{format.asDecimal(totalRow.dailyAverage)}</th>
                       <th className="num-cell"></th>
                     </tr>
                   </tfoot>
@@ -92,7 +75,7 @@ export default function Yield() {
               )
             })}
           </Fragment>
-        ))}
+        )}
       </Fragment>
     )
   }
