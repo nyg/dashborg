@@ -1,16 +1,16 @@
 // extract assets from: https://swissborg.com/supported-assets
 //
-// const cryptoCodeClass = 'hczDIU'
+// const cryptoCodeClass = 'hBvqaV'
 // const cryptoNameClass = 'dlAjLN'
-// const fiatCodeClass = 'bVRNsF'
+// const fiatCodeClass = 'ibwLr'
 // const fiatNameClass = 'llKSba'
 
 // const nodesWith = clazz => [...document.getElementsByClassName(clazz)].map(e => e.textContent)
 
 // const zipNodes = (codeClass, nameClass, type) => {
-//     const codes = nodesWith(codeClass)
-//     const names = nodesWith(nameClass)
-//     return names.map((name, i) => ({ code: codes[i], name: name, type: { connectOrCreate: { where: { value: type }, create: { value: type } } } }))
+//   const codes = nodesWith(codeClass)
+//   const names = nodesWith(nameClass)
+//   return names.map((name, i) => ({ code: codes[i], name: name, type: { connectOrCreate: { where: { value: type }, create: { value: type } } } }))
 // }
 
 // // right-click "Copy object"
@@ -78,6 +78,48 @@ const PrismaClient = require('@prisma/client').PrismaClient;
       }
     },
     {
+      "code": "BNB",
+      "name": "Binance Coin",
+      "type": {
+        "connectOrCreate": {
+          "where": {
+            "value": "Crypto"
+          },
+          "create": {
+            "value": "Crypto"
+          }
+        }
+      }
+    },
+    {
+      "code": "XRP",
+      "name": "XRP",
+      "type": {
+        "connectOrCreate": {
+          "where": {
+            "value": "Crypto"
+          },
+          "create": {
+            "value": "Crypto"
+          }
+        }
+      }
+    },
+    {
+      "code": "USDT",
+      "name": "Tether",
+      "type": {
+        "connectOrCreate": {
+          "where": {
+            "value": "Crypto"
+          },
+          "create": {
+            "value": "Crypto"
+          }
+        }
+      }
+    },
+    {
       "code": "PAXG",
       "name": "PAX Gold",
       "type": {
@@ -106,20 +148,6 @@ const PrismaClient = require('@prisma/client').PrismaClient;
       }
     },
     {
-      "code": "BNB",
-      "name": "Binance Coin",
-      "type": {
-        "connectOrCreate": {
-          "where": {
-            "value": "Crypto"
-          },
-          "create": {
-            "value": "Crypto"
-          }
-        }
-      }
-    },
-    {
       "code": "AAVE",
       "name": "Aave",
       "type": {
@@ -135,7 +163,7 @@ const PrismaClient = require('@prisma/client').PrismaClient;
     },
     {
       "code": "KNC",
-      "name": "KyberNetwork",
+      "name": "KNC Legacy",
       "type": {
         "connectOrCreate": {
           "where": {
@@ -246,6 +274,34 @@ const PrismaClient = require('@prisma/client').PrismaClient;
       }
     },
     {
+      "code": "LINK",
+      "name": "Chainlink",
+      "type": {
+        "connectOrCreate": {
+          "where": {
+            "value": "Crypto"
+          },
+          "create": {
+            "value": "Crypto"
+          }
+        }
+      }
+    },
+    {
+      "code": "MATIC",
+      "name": "Polygon",
+      "type": {
+        "connectOrCreate": {
+          "where": {
+            "value": "Crypto"
+          },
+          "create": {
+            "value": "Crypto"
+          }
+        }
+      }
+    },
+    {
       "code": "XLM",
       "name": "Stellar",
       "type": {
@@ -332,20 +388,6 @@ const PrismaClient = require('@prisma/client').PrismaClient;
     {
       "code": "BAT",
       "name": "Basic Attention Token",
-      "type": {
-        "connectOrCreate": {
-          "where": {
-            "value": "Crypto"
-          },
-          "create": {
-            "value": "Crypto"
-          }
-        }
-      }
-    },
-    {
-      "code": "LINK",
-      "name": "Chainlink",
       "type": {
         "connectOrCreate": {
           "where": {
@@ -527,7 +569,7 @@ const PrismaClient = require('@prisma/client').PrismaClient;
     },
     {
       "code": "SGD",
-      "name": "SG Dollar",
+      "name": "Singapore Dollar",
       "type": {
         "connectOrCreate": {
           "where": {
@@ -566,6 +608,20 @@ const PrismaClient = require('@prisma/client').PrismaClient;
           }
         }
       }
+    },
+    {
+      "code": "AED",
+      "name": "Emirati Dirham*",
+      "type": {
+        "connectOrCreate": {
+          "where": {
+            "value": "Fiat"
+          },
+          "create": {
+            "value": "Fiat"
+          }
+        }
+      }
     }
   ]
 
@@ -576,6 +632,8 @@ const PrismaClient = require('@prisma/client').PrismaClient;
   await prisma.$executeRaw('UPDATE sqlite_sequence SET seq = 0 WHERE name = "Asset" OR name = "AssetType"')
   console.log('Reset sequences')
 
+  await prisma.ledgerEntry.deleteMany()
+  await prisma.yieldTransfer.deleteMany()
   await prisma.asset.deleteMany()
   await prisma.assetType.deleteMany()
   console.log('Emptied tables')
