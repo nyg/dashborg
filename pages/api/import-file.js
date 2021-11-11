@@ -16,7 +16,7 @@ async function importAccountStatement(path) {
   // clean db
   await prisma.ledgerEntry.deleteMany()
   await prisma.ledgerEntryType.deleteMany()
-  await prisma.$executeRaw('UPDATE sqlite_sequence SET seq = 0 WHERE name = "LedgerEntry" OR name = "LedgerEntryType"')
+  await prisma.$executeRaw`UPDATE sqlite_sequence SET seq = 0 WHERE name = "LedgerEntry" OR name = "LedgerEntryType"`
 
   // parse excel file and insert data into db
   const workbook = new ExcelJS.stream.xlsx.WorkbookReader(path)
@@ -150,7 +150,7 @@ async function importYieldTransactions(path) {
 
   // clean db
   await prisma.yieldTransfer.deleteMany()
-  await prisma.$executeRaw('UPDATE sqlite_sequence SET seq = 0 WHERE name = "YieldTransfer"')
+  await prisma.$executeRaw`UPDATE sqlite_sequence SET seq = 0 WHERE name = "YieldTransfer"`
 
   // insert all transfers
   for (const transfer of transfers) {
@@ -179,10 +179,10 @@ export default async (req, res) => {
     // import file data into the database depending on the input tag's name
     let rowsInserted = 0
     if (file.hasOwnProperty('account-statement')) {
-      rowsInserted = await importAccountStatement(file['account-statement'].path)
+      rowsInserted = await importAccountStatement(file['account-statement'].filepath)
     }
     else if (file.hasOwnProperty('yield-transfers')) {
-      rowsInserted = await importYieldTransactions(file['yield-transfers'].path)
+      rowsInserted = await importYieldTransactions(file['yield-transfers'].filepath)
     }
     else {
       throw Error('Unknown file')

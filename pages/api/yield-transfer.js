@@ -8,13 +8,13 @@ export default async (req, res) => {
 
   const transfers = (await prisma.yieldTransfer
     .findMany({
-      orderBy: { completionDate: 'asc' },
       select: {
         completionDate: true,
         account: true,
         asset: { select: { code: true } },
         amount: true
-      }
+      },
+      orderBy: [{ assetId: 'asc' }, { completionDate: 'asc' }],
     }))
     .reduce((transfers, transfer) => {
 
