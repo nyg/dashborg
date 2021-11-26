@@ -2,6 +2,7 @@ import { PrismaClient, Decimal } from '@prisma/client'
 
 // TODO
 // - put yield transfer in ledger?
+// - error if not all assets are in yield-transfer file
 export default async (req, res) => {
 
   const prisma = new PrismaClient()

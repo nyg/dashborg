@@ -1,9 +1,9 @@
-import { Fragment } from 'react'
 import useSWR from 'swr'
 import Head from 'next/head'
 import Layout from '../components/layout'
-import * as format from '../utils/format'
 import TdNum from '../components/td-num'
+import * as format from '../utils/format'
+
 
 export default function Yield() {
 
@@ -49,11 +49,11 @@ export default function Yield() {
                     <td className="text-right">{format.asLongDate(period.startDate)}</td>
                     <td className="text-right">{format.asLongDate(period.endDate)}</td>
                     <TdNum>{period.dayCount}</TdNum>
-                    <TdNum className="v-sep">{period.transfered}</TdNum>
-                    <TdNum>{period.startBalance}</TdNum>
-                    <TdNum className="v-sep">{period.endBalance}</TdNum>
-                    <TdNum>{period.yieldEarned}</TdNum>
-                    <TdNum>{period.dailyAverage}</TdNum>
+                    <TdNum currency={asset} className="v-sep">{period.transfered}</TdNum>
+                    <TdNum currency={asset}>{period.startBalance}</TdNum>
+                    <TdNum currency={asset} className="v-sep">{period.endBalance}</TdNum>
+                    <TdNum currency={asset}>{period.yieldEarned}</TdNum>
+                    <TdNum currency={asset}>{period.dailyAverage}</TdNum>
                     <td className="pr-2"></td>
                   </tr>
                 ))}
@@ -63,11 +63,11 @@ export default function Yield() {
                   <th></th>
                   <th></th>
                   <TdNum>{totalRow.dayCount}</TdNum>
-                  <TdNum className="v-sep">{totalRow.transfered}</TdNum>
-                  <TdNum>{totalRow.startBalance}</TdNum>
-                  <TdNum className="v-sep">{totalRow.endBalance}</TdNum>
-                  <TdNum>{totalRow.yieldEarned}</TdNum>
-                  <TdNum>{totalRow.dailyAverage}</TdNum>
+                  <TdNum currency={asset} className="v-sep">{totalRow.transfered}</TdNum>
+                  <TdNum currency={asset}>{totalRow.startBalance}</TdNum>
+                  <TdNum currency={asset} className="v-sep">{totalRow.endBalance}</TdNum>
+                  <TdNum currency={asset}>{totalRow.yieldEarned}</TdNum>
+                  <TdNum currency={asset}>{totalRow.dailyAverage}</TdNum>
                   <th className="pr-2"></th>
                 </tr>
               </tfoot>

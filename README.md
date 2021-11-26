@@ -1,8 +1,12 @@
 # DashBorg
 
-Free and open-source dashboard for cryptoassets.
+The goal is a free and open-source dashboard for cryptoassets.
 
-## TODO
+🚧 Work in progress 🚧
 
-1. Upload yield subscriptions via Excel file
-2. Do research: Electron vs …
+## Install & run
+
+```sh
+npm install
+npm run dev
+```
