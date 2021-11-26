@@ -1,10 +1,11 @@
 {
   "name": "dashborg",
   "version": "0.1.0",
-  "description": "Dashboard for cryptoassets.",
+  "description": "Dashboard for cryptoassets",
   "scripts": {
     "dev": "next dev",
-    "init": "prisma db push && node db/init-*.js"
+    "init": "prisma db push && node db/init-*.js",
+    "clean": "rm ./uploads/*.xslx"
   },
   "repository": {
     "type": "git",

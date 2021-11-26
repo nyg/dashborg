@@ -627,10 +627,10 @@ const PrismaClient = require('@prisma/client').PrismaClient;
 
   const prisma = new PrismaClient()
   await prisma.$connect()
-  console.log('Connected')
+  console.log('Connected to db')
 
-  await prisma.$executeRaw('UPDATE sqlite_sequence SET seq = 0 WHERE name = "Asset" OR name = "AssetType"')
-  console.log('Reset sequences')
+  await prisma.$executeRaw`UPDATE sqlite_sequence SET seq = 0 WHERE name = "Asset" OR name = "AssetType"`
+  console.log('Sequences reset')
 
   await prisma.ledgerEntry.deleteMany()
   await prisma.yieldTransfer.deleteMany()
