@@ -1,14 +1,26 @@
 {
-  "extends": [
-    "group:allNonMajor"
-  ],
-  "schedule": [
-    "at 5:00 am every saturday"
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "schedule": [
+        "at 5:00 am every saturday"
+      ],
+      "groupName": "all stable non-major dependencies",
+      "groupSlug": "all-stable-minor-patch",
+      "stabilityDays": 3
+    }
   ],
   "branchPrefix": "renovate-",
   "dependencyDashboard": true,
   "ignorePaths": [],
-  "prCreation": "not-pending",
+  "internalChecksFilter": "strict",
+  "prCreation": "immediate",
   "rangeStrategy": "pin",
   "separateMultipleMajor": true,
   "stabilityDays": 3,
