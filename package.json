@@ -36,6 +36,6 @@
     "postcss": "8.4.5",
     "prisma": "3.5.0",
     "renovate": "31.63.0",
-    "tailwindcss": "2.2.19"
+    "tailwindcss": "3.0.18"
   }
 }

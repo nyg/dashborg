@@ -1,6 +1,0 @@
-@layer base {
-
-    h2 {
-        @apply mb-3 font-bold border-b border-gray-700
-    }
-}
