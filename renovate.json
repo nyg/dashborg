@@ -1,4 +1,5 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
     {
       "matchPackagePatterns": [
@@ -9,7 +10,7 @@
         "patch"
       ],
       "schedule": [
-        "at 5:00 am every saturday"
+        "after 2am and before 12am every saturday"
       ],
       "groupName": "all stable non-major dependencies",
       "groupSlug": "all-stable-minor-patch",
@@ -24,6 +25,7 @@
   "rangeStrategy": "pin",
   "separateMultipleMajor": true,
   "stabilityDays": 3,
+  "timezone": "Europe/Zurich",
   "vulnerabilityAlerts": {
     "automerge": true,
     "stabilityDays": 0
