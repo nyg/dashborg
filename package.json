@@ -22,20 +22,20 @@
     "url": "https://github.com/nyg/dashborg/issues"
   },
   "dependencies": {
-    "@prisma/client": "3.5.0",
+    "@prisma/client": "3.9.1",
     "exceljs": "4.3.0",
     "formidable": "2.0.1",
-    "next": "12.0.9",
+    "next": "12.0.10",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-number-format": "4.9.1",
-    "swr": "1.1.2"
+    "swr": "1.2.1"
   },
   "devDependencies": {
-    "autoprefixer": "10.4.1",
-    "postcss": "8.4.5",
-    "prisma": "3.5.0",
-    "renovate": "31.63.0",
-    "tailwindcss": "3.0.18"
+    "autoprefixer": "10.4.2",
+    "postcss": "8.4.6",
+    "prisma": "3.9.1",
+    "renovate": "31.70.0",
+    "tailwindcss": "3.0.19"
   }
 }
