@@ -33,9 +33,9 @@
   },
   "devDependencies": {
     "autoprefixer": "10.4.7",
-    "postcss": "8.4.13",
+    "postcss": "8.4.14",
     "prisma": "3.14.0",
-    "renovate": "32.60.0",
+    "renovate": "32.66.1",
     "tailwindcss": "3.0.24"
   }
 }
