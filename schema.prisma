@@ -1,17 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "sqlite"
   url      = "file:./db/database.db"
 }
 
 model Asset {
-
-  id     Int @id @default(autoincrement())
-  typeId Int
-
-  code String    @unique
-  name String
-  type AssetType @relation(fields: [typeId], references: [id])
-
+  id             Int             @id @default(autoincrement())
+  typeId         Int
+  code           String          @unique
+  name           String
+  type           AssetType       @relation(fields: [typeId], references: [id])
   ledgerEntry    LedgerEntry[]
   buyAssetTrade  Trade[]         @relation("buyAsset")
   sellAssetTrade Trade[]         @relation("sellAsset")
@@ -25,54 +26,43 @@ model AssetType {
 }
 
 model LedgerEntry {
-
-  id      Int @id @default(autoincrement())
+  id      Int             @id @default(autoincrement())
   typeId  Int
   assetId Int
-
   time    DateTime
-  type    LedgerEntryType @relation(fields: [typeId], references: [id])
-  asset   Asset           @relation(fields: [assetId], references: [id])
   amount  Decimal
   fee     Decimal
   balance Decimal
+  asset   Asset           @relation(fields: [assetId], references: [id])
+  type    LedgerEntryType @relation(fields: [typeId], references: [id])
 }
 
 model LedgerEntryType {
   id          Int           @id @default(autoincrement())
-  ledgerEntry LedgerEntry[]
   value       String        @unique
+  ledgerEntry LedgerEntry[]
 }
 
 model Trade {
-
-  id          Int @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   buyAssetId  Int
   sellAssetId Int
-
-  time       DateTime
-  buyAsset   Asset    @relation("buyAsset", fields: [buyAssetId], references: [id])
-  buyAmount  Decimal
-  buyFee     Decimal
-  buyBalance Decimal
-
-  sellAsset   Asset   @relation("sellAsset", fields: [sellAssetId], references: [id])
+  time        DateTime
+  buyAmount   Decimal
+  buyFee      Decimal
+  buyBalance  Decimal
   sellAmount  Decimal
   sellFee     Decimal
   sellBalance Decimal
+  buyAsset    Asset    @relation("buyAsset", fields: [buyAssetId], references: [id])
+  sellAsset   Asset    @relation("sellAsset", fields: [sellAssetId], references: [id])
 }
 
 model YieldTransfer {
-
-  id      Int @id @default(autoincrement())
-  assetId Int
-
+  id             Int      @id @default(autoincrement())
+  assetId        Int
   completionDate DateTime
   account        String
-  asset          Asset    @relation(fields: [assetId], references: [id])
   amount         Decimal
-}
-
-generator client {
-  provider = "prisma-client-js"
+  asset          Asset    @relation(fields: [assetId], references: [id])
 }
