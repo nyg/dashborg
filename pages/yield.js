@@ -78,10 +78,7 @@ export default function Yield() {
   }
 
   return (
-    <Layout>
-      <Head>
-        <title>Yield Earnings</title>
-      </Head>
+    <Layout name="Yield Earnings">
       <div className="space-y-12">
         {earnings}
       </div>

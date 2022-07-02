@@ -7,7 +7,7 @@ export default function Layout({ children, name }) {
   return (
     <div>
       <Head>
-        <title>{name} • DashBorg</title>
+        <title>{`${name} • DashBorg`}</title>
         <link rel="icon" href="/favicon.ico" />
         {/* <script data-goatcounter="/api/count" async src="/count.js"></script> */}
         {/* <meta name="viewport" content="viewport-fit=cover" /> */}

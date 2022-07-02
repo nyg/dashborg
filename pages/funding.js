@@ -48,10 +48,7 @@ export default function Funding() {
   }
 
   return (
-    <Layout>
-      <Head>
-        <title>Deposits &amp; Withdrawals</title>
-      </Head>
+    <Layout name="Deposits &amp; Withdrawals">
       <div className="space-y-8 w-4/5">
         {funding}
       </div>
