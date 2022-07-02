@@ -16,6 +16,24 @@
       "groupSlug": "all-stable-minor-patch",
       "stabilityDays": 3,
       "automerge": true
+    },
+    {
+      "matchPackageNames": [
+        "prisma",
+        "@prisma/client"
+      ],
+      "matchUpdateTypes": "major",
+      "groupName": "major Prisma dependencies",
+      "stabilityDays": 3
+    },
+    {
+      "matchPackageNames": [
+        "react",
+        "react-dom"
+      ],
+      "matchUpdateTypes": "major",
+      "groupName": "major React dependencies",
+      "stabilityDays": 3
     }
   ],
   "branchPrefix": "renovate-",
