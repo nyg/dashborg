@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "init": "prisma db push && node db/init-*.js",
-    "clean": "rm ./uploads/*.xslx",
-    "debug-renovate": "LOG_LEVEL=debug renovate --dry-run=true --print-config=true nyg/dashborg > renovate.log"
+    "clean": "rm ./uploads/*.xslx"
   },
   "repository": {
     "type": "git",
@@ -35,7 +34,6 @@
     "autoprefixer": "10.4.8",
     "postcss": "8.4.16",
     "prisma": "4.2.1",
-    "renovate": "32.173.1",
     "tailwindcss": "3.1.8"
   }
 }
