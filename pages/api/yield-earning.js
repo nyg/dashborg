@@ -11,7 +11,8 @@ export default async (req, res) => {
   /* Retrieve yield transfers and earnings from database. */
 
   const transfers = await prisma
-    .yieldTransfer.findMany({
+    .yieldTransfer
+    .findMany({
       select: {
         completionDate: true,
         account: true,
@@ -22,7 +23,8 @@ export default async (req, res) => {
     })
 
   const earnings = await prisma
-    .ledgerEntry.findMany({
+    .ledgerEntry
+    .findMany({
       select: {
         time: true,
         asset: { select: { code: true } },
@@ -36,81 +38,93 @@ export default async (req, res) => {
 
   /* Arrange transfer dates by asset and account. */
 
-  const transfersByAsset = transfers
-    .reduce((transfers, transfer) => {
+  const transfersByAsset = transfers.reduce((transfers, transfer) => {
 
-      // init keys
-      transfers[transfer.asset.code] ??= {}
-      transfers[transfer.asset.code][transfer.account] ??= { startDates: [] }
+    transfers[transfer.asset.code] ??= {}
+    transfers[transfer.asset.code][transfer.account] ??= { startDates: [] }
 
-      transfers[transfer.asset.code][transfer.account].startDates.push(transfer.completionDate.getTime())
-      return transfers
-    }, {})
+    transfers[transfer.asset.code][transfer.account].startDates.push(transfer.completionDate.getTime())
+    return transfers
+  }, {})
 
 
   /* Arrange transfers by date, asset and account. */
 
-  const transfersByDate = transfers
-    .reduce((transfers, transfer) => {
+  const transfersByDate = transfers.reduce((transfers, transfer) => {
 
-      const date = transfer.completionDate.getTime()
-      const asset = transfer.asset.code
+    const date = transfer.completionDate.getTime()
+    const asset = transfer.asset.code
 
-      // init keys
-      transfers[date] ??= {}
-      transfers[date][asset] ??= {}
-      transfers[date][asset][transfer.account] ??= {}
+    transfers[date] ??= {}
+    transfers[date][asset] ??= {}
+    transfers[date][asset][transfer.account] ??= {}
 
-      transfers[date][asset][transfer.account] = {
-        balance: new Decimal(0),
-        transfered: transfer.amount
-      }
+    transfers[date][asset][transfer.account] = {
+      balance: new Decimal(0),
+      transfered: transfer.amount
+    }
 
-      return transfers
-    }, {})
+    return transfers
+  }, {})
 
   /* Arrange earnings by date, asset and account and compute daily balances. */
 
-  const earningsByDate = earnings
-    .reduce((earnings, earning) => {
+  const earningsByDate = earnings.reduce((earningsByDate, earning) => {
 
-      const asset = earning.asset.code
-      const today = earning.time.getTime()
-      const yesterday = new Date(today - 86_400_000).getTime()
+    const asset = earning.asset.code
+    const today = earning.time.getTime()
+    // const lastPayout = new Date(today - 86_400_000).getTime()
 
-      // init keys
-      earnings[today] ??= {}
-      earnings[today][asset] ??= {}
+    // init keys
+    earningsByDate[today] ??= {}
+    earningsByDate[today][asset] ??= {}
 
-      // compute the total balance of the previous day for the current asset
-      const accounts = Object.keys(earnings[yesterday][asset])
-      const totalBalance = accounts.reduce((totalBalance, account) =>
-        totalBalance
-          .plus(earnings[yesterday][asset][account].balance)
-          .plus(earnings[yesterday][asset][account].transfered),
-        new Decimal(0))
+    // find the last date for which we have received a yield payout
+    const earningDates = Object.keys(earningsByDate).map(k => parseInt(k)).sort().reverse()
+    const todayIndex = earningDates.indexOf(today)
+    const previousEarningDates = earningDates.slice(todayIndex + 1)
+    let lastPayout
 
-      // compute today's balance for each account
-      accounts.forEach(account => {
+    for (const previousDate of previousEarningDates) {
+      if (earningsByDate[previousDate][asset]) {
+        lastPayout = previousDate
+        break
+      }
+    }
 
-        // init account balance
-        earnings[today][asset][account] ??= {
-          balance: new Decimal(0),
-          transfered: new Decimal(0)
-        }
+    if (lastPayout === undefined) {
+      throw `Could not find a previous payout or transfer for ${asset}`
+    }
 
-        // today's balance = yesterday's balance
-        //                 + yesterday's transfered amount if any
-        //                 + daily yield earning pro rata of yesterday's account balance
-        const yesterdayBalance = earnings[yesterday][asset][account].balance.plus(earnings[yesterday][asset][account].transfered)
-        earnings[today][asset][account].balance = yesterdayBalance.plus(yesterdayBalance.dividedBy(totalBalance).times(earning.amount))
+    // compute the total balance of the previous day for the current asset
+    const accounts = Object.keys(earningsByDate[lastPayout][asset])
+    const totalBalance = accounts.reduce((totalBalance, account) =>
+      totalBalance
+        .plus(earningsByDate[lastPayout][asset][account].balance)
+        .plus(earningsByDate[lastPayout][asset][account].transfered),
+      new Decimal(0))
 
-        // update last date for which yield was received for the account
-        transfersByAsset[asset][account].endDate = today
-      })
+    // compute today's balance for each account
+    accounts.forEach(account => {
 
-      return earnings
-    }, transfersByDate)
+      // init account balance
+      earningsByDate[today][asset][account] ??= {
+        balance: new Decimal(0),
+        transfered: new Decimal(0)
+      }
+
+      // today's balance = yesterday's balance
+      //                 + yesterday's transfered amount if any
+      //                 + daily yield earning pro rata of yesterday's account balance
+      const yesterdayBalance = earningsByDate[lastPayout][asset][account].balance.plus(earningsByDate[lastPayout][asset][account].transfered)
+      earningsByDate[today][asset][account].balance = yesterdayBalance.plus(yesterdayBalance.dividedBy(totalBalance).times(earning.amount))
+
+      // update last date for which yield was received for the account
+      transfersByAsset[asset][account].endDate = today
+    })
+
+    return earningsByDate
+  }, transfersByDate)
 
   /* Prepare data for UI. */
 
