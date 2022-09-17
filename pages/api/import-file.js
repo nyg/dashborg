@@ -28,16 +28,21 @@ async function importAccountStatement(path) {
 
     for await (const row of worksheet) {
 
-      if (row.number == 1) {
-        console.info(`User id is ${row.getCell(2)}.`)
+      if (row.number == 6) {
+        console.info(`User id is ${row.getCell(4)}.`)
       }
 
       if (row.number % 1000 == 0) {
         console.info(`Processed ${row.number} rows.`)
       }
 
-      if (row.number < 10) {
+      if (row.number < 15) {
         continue
+      }
+
+      if (row.getCell(2).value === null) {
+        console.log('Finished at row', row.number - 1)
+        break
       }
 
       let type = row.getCell(3).value
@@ -45,12 +50,12 @@ async function importAccountStatement(path) {
       const netAmount = row.getCell(9).value
 
       // differentiate between yield earnings and referal rewards
-      if (type == 'Earnings') {
-        type = row.getCell(11).value == 'Yield earnings' ? 'Yield' : 'Reward'
+      if (type == 'Payouts') {
+        type = row.getCell(11).value == 'Yield payouts' ? 'Yield' : 'Reward'
       }
 
       // compute the balance of each asset
-      const decrease = type == 'Withdrawals' || type == 'Sell'
+      const decrease = type == 'Withdrawal' || type == 'Sell'
       balances[currency] = (balances[currency] ? balances[currency] : 0) + (decrease ? -netAmount : netAmount)
 
       await prisma.ledgerEntry.create({
